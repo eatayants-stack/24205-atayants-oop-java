@@ -9,19 +9,23 @@ public class GameEngine {
         this.state = new GameState();
     }
 
-    public ProcessResult processGuess(String guess) {
+    public GameState processGuess(String guess) {
+
         state.incrementAttempts();
 
         int[] counts = calculateBullsAndCows(secretNumber.getValue(), guess);
         int bulls = counts[0];
         int cows = counts[1];
 
+        state.setBulls(bulls);
+        state.setCows(cows);
+
         boolean isWin = (bulls == 4);
         if (isWin) {
             state.finish(true);
         }
 
-        return new ProcessResult(bulls, cows, isWin, state);
+        return state;
     }
 
     private int[] calculateBullsAndCows(String secret, String guess) {
@@ -46,45 +50,7 @@ public class GameEngine {
         this.secretNumber = SecretNumber.GenerateSecret();
         this.state.reset();
     }
-
-
-
-    public boolean isGameFinished() {
-        return state.isFinished();
-    }
-
-    public boolean isWin() {
-        return state.isWon();
-    }
-
-    public int getAttempts() {
-        return state.getAttempts();
-    }
-
-    public String getSecretValue() {
-        return secretNumber.getValue();
-    }
-
-
-    public static class ProcessResult {
-        private final int bulls;
-        private final int cows;
-        private final boolean win;
-        private final int attempts;
-        private final boolean gameFinished;
-
-        public ProcessResult(int bulls, int cows, boolean win, GameState state) {
-            this.bulls = bulls;
-            this.cows = cows;
-            this.win = win;
-            this.attempts = state.getAttempts();
-            this.gameFinished = state.isFinished();
-        }
-
-        public int getBulls() { return bulls; }
-        public int getCows() { return cows; }
-        public boolean isWin() { return win; }
-        public int getAttempts() { return attempts; }
-        public boolean isGameFinished() { return gameFinished; }
+    public GameState getGameState() {
+        return state;
     }
 }

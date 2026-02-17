@@ -5,9 +5,11 @@ import java.util.Scanner;
 public class ConsoleUI {
     private final GameEngine engine;
     private final Scanner scanner;
+    private final GameState state;
 
     public ConsoleUI(GameEngine engine) {
         this.engine = engine;
+        this.state = engine.getGameState();
         this.scanner = new Scanner(System.in);
     }
 
@@ -20,7 +22,7 @@ public class ConsoleUI {
     private void gameLoop() {
         System.out.println("\nThe game has started!");
 
-        while (!engine.isGameFinished()) {
+        while (!state.isFinished()) {
             System.out.print("Enter your guess: ");
             String guess = scanner.nextLine();
 
@@ -31,7 +33,7 @@ public class ConsoleUI {
                 continue;
             }
 
-            GameEngine.ProcessResult result = engine.processGuess(guess);
+            GameState result = engine.processGuess(guess);
 
 
             System.out.println("Result: " + result.getBulls() + " bull(s), " + result.getCows() + " cow(s)");
