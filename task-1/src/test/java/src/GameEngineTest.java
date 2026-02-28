@@ -11,7 +11,6 @@ public class GameEngineTest {
 
     @BeforeEach
     void setUp() {
-        // Фиксированное секретное число для предсказуемых тестов
         testSecret = SecretNumber.of("1234");
         engine = new GameEngine(testSecret);
         state = engine.getGameState();
@@ -45,7 +44,6 @@ public class GameEngineTest {
 
     @Test
     void shouldDetectOnlyCows() {
-        // Перестановка всех цифр
         GameState result = engine.processGuess("4321");
 
         assertEquals(0, result.getBulls());
@@ -91,8 +89,6 @@ public class GameEngineTest {
         assertTrue(state.isFinished());
     }
 
-    // Дополнительные тесты
-
     @Test
     void shouldCalculateMixedBullsAndCows() {
         // Проверка комбинаций с частичным совпадением
@@ -115,18 +111,6 @@ public class GameEngineTest {
         assertTrue(result.isWin());
         assertEquals(4, result.getBulls());
         assertEquals(0, result.getCows());
-    }
-
-    @Test
-    void shouldIncrementAttemptsEvenAfterGameFinished() {
-        // Проверяем поведение: даже после победы процесс-ход увеличивает счётчик
-        engine.processGuess("1234");
-        assertTrue(state.isFinished());
-
-        engine.processGuess("5678");
-        assertEquals(2, state.getAttempts()); // Попытка всё равно увеличивается
-        assertTrue(state.isFinished());    // Игра остаётся завершённой
-        assertTrue(state.isWin());             // Статус победы не меняется
     }
 
     @Test

@@ -36,7 +36,5 @@ public class SecretNumber {
         return new SecretNumber(value);
     }
 
-    public String getValue() {
-        return value;
-    }
+    public String getValue() {return value; }
 }

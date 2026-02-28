@@ -8,16 +8,13 @@ public class SecretNumberTest {
 
     @Test
     void shouldCreateRandomSecretNumber() {
-        // When
         SecretNumber secret = SecretNumber.GenerateSecret();
-
-        // Then
         assertNotNull(secret);
         assertNotNull(secret.getValue());
         assertEquals(4, secret.getValue().length());
     }
 
-    @RepeatedTest(10)  // Проверим 10 случайных чисел
+    @RepeatedTest(10)
     void shouldHaveOnlyDigitsInRandomSecret() {
         SecretNumber secret = SecretNumber.GenerateSecret();
         String value = secret.getValue();
@@ -41,13 +38,8 @@ public class SecretNumberTest {
 
     @Test
     void shouldCreateSecretWithGivenValue() {
-        // Given
         String expected = "1234";
-
-        // When
         SecretNumber secret = SecretNumber.of(expected);
-
-        // Then
         assertEquals(expected, secret.getValue());
     }
 }

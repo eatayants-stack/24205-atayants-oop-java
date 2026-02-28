@@ -1,7 +1,5 @@
 package src;
 
-
-
 public class ValidationResult {
     private final boolean valid;
     private final String errorMessage;
@@ -14,17 +12,12 @@ public class ValidationResult {
     public static ValidationResult valid() {
         return new ValidationResult(true, null);
     }
-
     public static ValidationResult invalid(String message) {
         return new ValidationResult(false, message);
     }
-
     public boolean isValid()
     {
         return valid;
     }
-    public String getErrorMessage()
-    {
-        return errorMessage;
-    }
+    public String getErrorMessage() { return errorMessage; }
 }

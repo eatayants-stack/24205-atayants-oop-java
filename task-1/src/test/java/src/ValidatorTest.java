@@ -11,13 +11,9 @@ public class ValidatorTest {
 
     @Test
     void shouldAcceptValidGuess() {
-        // Given
+
         String validGuess = "1234";
-
-        // When
         ValidationResult result = Validator.validate(validGuess);
-
-        // Then
         assertTrue(result.isValid());
         assertNull(result.getErrorMessage());
     }
@@ -60,5 +56,18 @@ public class ValidatorTest {
         ValidationResult result = Validator.validate(guess);
         assertTrue(result.isValid());
         assertNull(result.getErrorMessage());
+    }
+    @ParameterizedTest
+    @EmptySource
+    @ValueSource(strings = {"    ", "\t\n", "12 3"})
+    void shouldRejectEmptyOrWhitespace(String guess) {
+        ValidationResult result = Validator.validate(guess);
+        assertFalse(result.isValid());
+    }
+
+    @Test
+    void shouldRejectNegativeNumbers() {
+        ValidationResult result = Validator.validate("-123");
+        assertFalse(result.isValid());
     }
 }

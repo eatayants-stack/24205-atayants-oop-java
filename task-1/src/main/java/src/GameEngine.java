@@ -1,17 +1,23 @@
 package src;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class GameEngine {
+    private static final Logger logger = LoggerFactory.getLogger(GameEngine.class);
+
     private SecretNumber secretNumber;
     private final GameState state;
 
     public GameEngine(SecretNumber secretNumber) {
         this.secretNumber = secretNumber;
         this.state = new GameState();
+        logger.debug("GameEngine initialized. Secret number for this session: {}", secretNumber.getValue());
     }
 
     public GameState processGuess(String guess) {
-
         state.incrementAttempts();
+        logger.debug("Processing guess #{} : '{}'", state.getAttempts(), guess);
 
         int[] counts = calculateBullsAndCows(secretNumber.getValue(), guess);
         int bulls = counts[0];
@@ -20,8 +26,10 @@ public class GameEngine {
         state.setBulls(bulls);
         state.setCows(cows);
 
-        boolean isWin = (bulls == 4);
-        if (isWin) {
+        logger.debug("Calculation results for '{}': Bulls={}, Cows={}", guess, bulls, cows);
+
+        if (bulls == 4) {
+            logger.info("Win condition reached! Guess '{}' matches secret '{}'", guess, secretNumber.getValue());
             state.finish(true);
         }
 
@@ -47,9 +55,13 @@ public class GameEngine {
     }
 
     public void restart() {
+        logger.debug("Restarting game. Previous secret was: {}", secretNumber.getValue());
         this.secretNumber = SecretNumber.GenerateSecret();
         this.state.reset();
+        logger.info("Game restarted with a new secret number.");
+        logger.debug("New secret number: {}", secretNumber.getValue());
     }
+
     public GameState getGameState() {
         return state;
     }
