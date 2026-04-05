@@ -1,36 +1,32 @@
 public class Queen extends Piece {
-    public Queen(int x, int y, Piece.Color color) {
-        super(x, y, color, "Queen");
-    }
-
+    public Queen(int x, int y, Side side) { super(x, y, side, "Queen"); }
     @Override
     public boolean isValidMove(Piece[][] board, int fromX, int fromY, int toX, int toY) {
-        if (board[toX][toY] != null && board[toX][toY].getColor() == this.color) {
-            return false;
-        }
-
-        int deltaX = Math.abs(fromX - toX);
-        int deltaY = Math.abs(fromY - toY);
-        boolean isStraight = (fromX == toX || fromY == toY);
-        boolean isDiagonal = (deltaX == deltaY);
-
-        if (!isStraight && !isDiagonal) {
-            return false;
-        }
-
-        int stepX = Integer.compare(toX, fromX);
-        int stepY = Integer.compare(toY, fromY);
-
-        int pathX = fromX + stepX;
-        int pathY = fromY + stepY;
-
-        while (pathX != toX || pathY != toY) {
-            if (board[pathX][pathY] != null) {
-                return false;
+        if (board[toX][toY] != null && board[toX][toY].getColor() == this.side) return false;
+        if (fromX == toX || fromY == toY) {
+            int stepX = Integer.signum(toX - fromX);
+            int stepY = Integer.signum(toY - fromY);
+            int x = fromX + stepX, y = fromY + stepY;
+            while (x != toX || y != toY) {
+                if (board[x][y] != null) return false;
+                x += stepX;
+                y += stepY;
             }
-            pathX += stepX;
-            pathY += stepY;
+            return true;
         }
-        return true;
+        if (Math.abs(fromX - toX) == Math.abs(fromY - toY)) {
+            int stepX = Integer.signum(toX - fromX);
+            int stepY = Integer.signum(toY - fromY);
+            int x = fromX + stepX, y = fromY + stepY;
+            while (x != toX || y != toY) {
+                if (board[x][y] != null) return false;
+                x += stepX;
+                y += stepY;
+            }
+            return true;
+        }
+        return false;
     }
+    @Override
+    public Piece copy() { return new Queen(this.x, this.y, this.side); }
 }
