@@ -4,13 +4,13 @@ public class King extends Piece {
     }
 
     @Override
-    public boolean isValidMove(Piece[][] board, int fromX, int fromY, int toX, int toY) {
+    public boolean isValidMove(Piece[][] board, BoardState state, int fromX, int fromY, int toX, int toY) {
         if (board[toX][toY] != null && board[toX][toY].getColor() == this.side) {
             return false;
         }
         int deltaX = Math.abs(fromX - toX);
         int deltaY = Math.abs(fromY - toY);
-        return (deltaX <= 1 && deltaY <= 1) || (deltaX == 2 && deltaY == 0);
+        return (deltaX <= 1 && deltaY <= 1);
     }
 
     @Override

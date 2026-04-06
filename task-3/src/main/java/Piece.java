@@ -11,7 +11,7 @@ public abstract class Piece {
         this.type = type;
     }
 
-    public abstract boolean isValidMove(Piece[][] board, int fromX, int fromY, int toX, int toY);
+    public abstract boolean isValidMove(Piece[][] board, BoardState state, int fromX, int fromY, int toX, int toY);
     public abstract Piece copy();
 
     public int getX() { return x; }

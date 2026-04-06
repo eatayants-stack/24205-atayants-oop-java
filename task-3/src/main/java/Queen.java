@@ -1,7 +1,7 @@
 public class Queen extends Piece {
     public Queen(int x, int y, Side side) { super(x, y, side, "Queen"); }
     @Override
-    public boolean isValidMove(Piece[][] board, int fromX, int fromY, int toX, int toY) {
+    public boolean isValidMove(Piece[][] board, BoardState state, int fromX, int fromY, int toX, int toY) {
         if (board[toX][toY] != null && board[toX][toY].getColor() == this.side) return false;
         if (fromX == toX || fromY == toY) {
             int stepX = Integer.signum(toX - fromX);

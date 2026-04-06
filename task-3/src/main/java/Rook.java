@@ -1,7 +1,7 @@
 public class Rook extends Piece {
     public Rook(int x, int y, Side side) { super(x, y, side, "Rook"); }
     @Override
-    public boolean isValidMove(Piece[][] board, int fromX, int fromY, int toX, int toY) {
+    public boolean isValidMove(Piece[][] board, BoardState state, int fromX, int fromY, int toX, int toY) {
         if (board[toX][toY] != null && board[toX][toY].getColor() == this.side) return false;
         if (fromX != toX && fromY != toY) return false;
         int stepX = Integer.signum(toX - fromX);

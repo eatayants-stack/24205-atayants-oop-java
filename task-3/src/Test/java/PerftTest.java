@@ -2,11 +2,12 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PerftTest {
+
     @Test
     void testPerftInitialDepth1() {
         Board board = new Board();
         long nodes = Perft.perft(board, 1);
-        assertEquals(20, nodes); // в начальной позиции 20 ходов
+        assertEquals(20, nodes);
     }
 
     @Test
@@ -35,5 +36,11 @@ public class PerftTest {
         Board board = new Board();
         long nodes = Perft.perft(board, 5);
         assertEquals(4865609, nodes);
+    }
+    @Test
+    void testPerftInitialDepth6() {
+        Board board = new Board();
+        long nodes = Perft.perft(board, 6);
+        assertEquals(119060324, nodes);
     }
 }
