@@ -19,9 +19,4 @@ public class Move {
         this.enPassantPawnX = enPassantPawnX;
         this.promotionPiece = promotionPiece;
     }
-
-    public Move(int fromX, int fromY, int toX, int toY, Piece capturedPiece,
-                boolean isCastle, boolean isEnPassant, int enPassantPawnX) {
-        this(fromX, fromY, toX, toY, capturedPiece, isCastle, isEnPassant, enPassantPawnX, null);
-    }
 }

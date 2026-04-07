@@ -2,7 +2,7 @@ public class Pawn extends Piece {
     public Pawn(int x, int y, Side side) {
         super(x, y, side, "Pawn");
     }
-
+    @Override
     public boolean isValidMove(Piece[][] board, BoardState state, int fromX, int fromY, int toX, int toY) {
         if (board[toX][toY] != null && board[toX][toY].getColor() == this.side) return false;
         int dx = toX - fromX;
@@ -29,10 +29,8 @@ public class Pawn extends Piece {
 
             Pawn lastPawn = state.getLastDoubleMovePawn();
             boolean correctRank = (side == Side.WHITE && fromY == 3) || (side == Side.BLACK && fromY == 4);
-            if (board[toX][toY] == null && lastPawn != null && correctRank
-                    && lastPawn.getX() == toX && lastPawn.getY() == fromY) {
-                return true;
-            }
+            return board[toX][toY] == null && lastPawn != null && correctRank
+                    && lastPawn.getX() == toX && lastPawn.getY() == fromY;
         }
         return false;
     }

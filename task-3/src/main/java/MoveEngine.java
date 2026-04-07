@@ -85,15 +85,16 @@ public class MoveEngine {
         return false;
     }
 
-    private static boolean isKingInCheck(BoardState state, Side side) {
+    public static boolean isCheck(BoardState state, Side side) {
         King king = (side == Side.WHITE) ? state.whiteKing : state.blackKing;
         return king != null && isSquareAttacked(state, king.getX(), king.getY(), side.opposite());
     }
 
-    public static boolean isCheck(BoardState state) {
-        return isKingInCheck(state, state.getCurrentTurn());
+    public static boolean isStalemate(Board board) {
+        if (board.isCheck()) return false;
+        List<Move> moves = MoveEngine.generateMoves(board.getState());
+        return moves.isEmpty();
     }
-
 
     public static boolean wouldMoveCauseSelfCheck(BoardState state, int fromX, int fromY, int toX, int toY) {
         Piece moving = state.getPiece(fromX, fromY);
@@ -107,7 +108,7 @@ public class MoveEngine {
         moving.setX(toX);
         moving.setY(toY);
 
-        boolean inCheck = isKingInCheck(state, moving.getColor());
+        boolean inCheck = isCheck(state, moving.getColor());
 
 
         moving.setX(oldX);
@@ -191,11 +192,12 @@ public class MoveEngine {
         }
         if (rookMoved) return false;
 
+        if (isCheck(state, side)) return false;
         int step = (toX > king.getX()) ? 1 : -1;
-        int cx = king.getX() + step;
-        while (cx != rookX) {
-            if (state.getPiece(cx, king.getY()) != null) return false;
-            cx += step;
+        int x = king.getX() + step;
+        while (x != toX) {
+            if (isSquareAttacked(state, x, king.getY(), side.opposite())) return false;
+            x += step;
         }
 
 
@@ -217,7 +219,7 @@ public class MoveEngine {
         rookCopy.setX(rookToX);
         rookCopy.setY(rookY);
 
-        return !isKingInCheck(copy, side);
+        return !isCheck(copy, side);
     }
 
     public static void executeCastle(BoardState state, King king, int fromX, int fromY, int toX, int toY) {

@@ -11,7 +11,7 @@ public class BoardState {
     private boolean blackRookQMoved;
     private Pawn lastDoubleMovePawn;
 
-    // Конструктор для пустой доски
+
     public BoardState() {
         cells = new Piece[8][8];
         currentTurn = Side.WHITE;
@@ -38,8 +38,8 @@ public class BoardState {
         this.blackRookQMoved = other.blackRookQMoved;
 
 
-        this.whiteKing = findKing(null, Side.WHITE);
-        this.blackKing = findKing(null, Side.BLACK);
+        this.whiteKing = findKing(Side.WHITE);
+        this.blackKing = findKing(Side.BLACK);
 
 
         if (other.lastDoubleMovePawn != null) {
@@ -49,8 +49,40 @@ public class BoardState {
         }
     }
 
+    public boolean equalsPosition(BoardState other) {
+        if (this.currentTurn != other.currentTurn) return false;
+        if (this.whiteKingMoved != other.whiteKingMoved) return false;
+        if (this.blackKingMoved != other.blackKingMoved) return false;
+        if (this.whiteRookKMoved != other.whiteRookKMoved) return false;
+        if (this.whiteRookQMoved != other.whiteRookQMoved) return false;
+        if (this.blackRookKMoved != other.blackRookKMoved) return false;
+        if (this.blackRookQMoved != other.blackRookQMoved) return false;
 
-    private King findKing(King ignored, Side side) {
+
+        Pawn thisPawn = this.getLastDoubleMovePawn();
+        Pawn otherPawn = other.getLastDoubleMovePawn();
+        if (thisPawn == null && otherPawn != null) return false;
+        if (thisPawn != null && otherPawn == null) return false;
+        if (thisPawn != null) {
+            if (thisPawn.getX() != otherPawn.getX() || thisPawn.getY() != otherPawn.getY())
+                return false;
+        }
+
+
+        for (int x = 0; x < 8; x++) {
+            for (int y = 0; y < 8; y++) {
+                Piece p1 = this.getPiece(x, y);
+                Piece p2 = other.getPiece(x, y);
+                if (p1 == null && p2 == null) continue;
+                if (p1 == null || p2 == null) return false;
+                if (p1.getClass() != p2.getClass() || p1.getColor() != p2.getColor())
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    private King findKing( Side side) {
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
                 Piece piece = cells[x][y];
