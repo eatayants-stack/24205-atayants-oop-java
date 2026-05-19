@@ -38,7 +38,7 @@ public class BoardRender {
         button.putClientProperty("x", x);
         button.putClientProperty("y", y);
 
-        button.addActionListener(_ -> {
+        button.addActionListener(event -> {
             if (controller != null) {
                 int bx = (int) button.getClientProperty("x");
                 int by = (int) button.getClientProperty("y");

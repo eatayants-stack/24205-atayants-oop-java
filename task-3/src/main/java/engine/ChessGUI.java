@@ -47,11 +47,11 @@ public class ChessGUI extends JFrame {
         JPanel controlPanel = new JPanel();
 
         JButton newGameBtn = new JButton("New Game");
-        newGameBtn.addActionListener(_ -> controller.resetGame());
+        newGameBtn.addActionListener(event -> controller.resetGame());
         controlPanel.add(newGameBtn);
 
         JButton settingsBtn = new JButton("Settings");
-        settingsBtn.addActionListener(_ -> {
+        settingsBtn.addActionListener(event -> {
             Configuration newConfig = SettingsDialog.showAndGet(this);
             if (newConfig != null) {
                 render.setBoardFlipped(newConfig.isBoardFlipped());

@@ -32,11 +32,11 @@ public class SettingsDialog {
         modePanel.add(twoPlayerBtn);
         panel.add(modePanel);
 
-        twoPlayerBtn.addActionListener(_ -> {
+        twoPlayerBtn.addActionListener(event -> {
             whiteBtn.setEnabled(!twoPlayerBtn.isSelected());
             blackBtn.setEnabled(!twoPlayerBtn.isSelected());
         });
-        vsBotBtn.addActionListener(_ -> {
+        vsBotBtn.addActionListener(event -> {
             whiteBtn.setEnabled(true);
             blackBtn.setEnabled(true);
         });

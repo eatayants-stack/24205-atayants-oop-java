@@ -129,7 +129,6 @@ public class GameController {
         SwingWorker<MoveCommand, Void> worker = new SwingWorker<>() {
             @Override
             protected MoveCommand doInBackground() {
-                try { Thread.sleep(300); } catch (InterruptedException ignored) {}
                 return bot.getBestMove(board, 4);
             }
 
