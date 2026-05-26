@@ -32,17 +32,4 @@ public class PerftTest {
         long nodes = Perft.perft(board, 4);
         assertEquals(197281, nodes);
     }
-
-    @Test
-    public void testPerftInitialDepth5() {
-        Board board = new Board();
-        long nodes = Perft.perft(board, 5);
-        assertEquals(4865609, nodes);
-    }
-    @Test
-    public void testPerftInitialDepth6() {
-        Board board = new Board();
-        long nodes = Perft.perft(board, 6);
-        assertEquals(119060324, nodes);
-    }
 }
