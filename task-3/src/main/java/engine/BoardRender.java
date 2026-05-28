@@ -17,7 +17,7 @@ public class BoardRender {
     private GameController controller;
     private JPanel boardPanel;
 
-    public void createBoardPanel(JPanel boardPanel) {
+    public void createBoardPanel(JPanel boardPanel) {//Initialize board panel
         this.boardPanel = boardPanel;
         boardPanel.setLayout(new GridLayout(8, 8));
         for (int y = 0; y < 8; y++) {
@@ -30,7 +30,7 @@ public class BoardRender {
         rebuildBoardOrder();
     }
 
-    private JButton getJButton(int x, int y) {
+    private JButton getJButton(int x, int y) {//Create button
         JButton button = new JButton();
         button.setOpaque(true);
         button.setBorderPainted(false);
@@ -48,7 +48,7 @@ public class BoardRender {
         return button;
     }
 
-    private void rebuildBoardOrder() {
+    private void rebuildBoardOrder() {//Reorders the buttons on the panel based on the boardFlipped flag
         if (boardPanel == null) return;
 
         boardPanel.removeAll();
@@ -75,7 +75,7 @@ public class BoardRender {
         boardPanel.repaint();
     }
 
-    public void setBoardFlipped(boolean flipped) {
+    public void setBoardFlipped(boolean flipped) {//Changes the flip state
         if (this.boardFlipped != flipped) {
             this.boardFlipped = flipped;
             rebuildBoardOrder();
@@ -83,12 +83,12 @@ public class BoardRender {
     }
 
 
-    public JButton getButton(int x, int y) {
+    public JButton getButton(int x, int y) {//Returns the button at the given coordinates
         if (x < 0 || x >= 8 || y < 0 || y >= 8) return null;
         return buttons[x][y];
     }
 
-    public void updateIcons(BoardState state) {
+    public void updateIcons(BoardState state) {//Updates every button's background color
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
                 JButton button = buttons[x][y];
@@ -120,7 +120,7 @@ public class BoardRender {
         }
     }
 
-    private ImageIcon getCachedIcon(String fileName) {
+    private ImageIcon getCachedIcon(String fileName) {//Loads and scales a piece image from the classpath
         if (iconCache.containsKey(fileName)) {
             return iconCache.get(fileName);
         }
@@ -137,19 +137,19 @@ public class BoardRender {
         return null;
     }
 
-    public void clearSelection(int selectedX, int selectedY) {
+    public void clearSelection(int selectedX, int selectedY) {//Removes the border (selection highlight) from the button
         JButton btn = getButton(selectedX, selectedY);
         if (btn != null) btn.setBorder(null);
     }
 
-    public void highlightCell(int x, int y) {
+    public void highlightCell(int x, int y) {//Draws red border around the button
         JButton btn = getButton(x, y);
         if (btn != null) {
             btn.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
         }
     }
 
-    public void setButtonsEnabled(boolean enabled) {
+    public void setButtonsEnabled(boolean enabled) {//Enables or disables all board buttons (block input)
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
                 buttons[x][y].setEnabled(enabled);

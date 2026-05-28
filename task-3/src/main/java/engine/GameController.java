@@ -84,7 +84,7 @@ public class GameController {
         }
     }
 
-    private void selectPiece(int x, int y) {
+    private void selectPiece(int x, int y) {//Select a piece at the given coordinates
         BoardState state = board.getState();
         Piece p = state.getPiece(x, y);
         if (p != null && p.getColor() == state.getCurrentTurn()) {
