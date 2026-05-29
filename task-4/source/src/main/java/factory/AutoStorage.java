@@ -53,4 +53,8 @@ public class AutoStorage {
     public void addObserver(Observer observer) {
         storage.addObserver(observer);
     }
+
+    public int getCurrentSize() {
+        return storage.getCurrentSize();
+    }
 }

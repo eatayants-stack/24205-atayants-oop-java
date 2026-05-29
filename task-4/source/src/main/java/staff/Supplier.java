@@ -13,7 +13,9 @@ public class Supplier implements Runnable {
     private final DetailType type;
     private volatile int delayMs;
 
+    @SuppressWarnings("unchecked")
     public Supplier(Storage<? extends Detail> storage, DetailType type, int delayMs) {
+        // Safe because we only put parts of the correct type (Body, Motor, or Accessory)
         this.storage = (Storage<Detail>) storage;
         this.type = type;
         this.delayMs = delayMs;
