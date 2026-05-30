@@ -58,7 +58,13 @@ public class Main {
 
         SwingUtilities.invokeLater(() -> {
             GUI gui = new GUI(workerPool,
-                    config.bodySupplierDelay, config.motorSupplierDelay, config.accessorySupplierDelay);
+                    bodyStorage,
+                    motorStorage,
+                    accessoryStorage,
+                    autoStorage,
+                    config.bodySupplierDelay,
+                    config.motorSupplierDelay,
+                    config.accessorySupplierDelay);
             gui.getControlPanel().bindSuppliers(bodySuppliers, motorSuppliers, accessorySuppliers);
             CarProductionObserver listener = new CarProductionObserver(stat, gui.getControlPanel());
             autoStorage.addObserver(listener);

@@ -14,22 +14,15 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <slf4j.version>2.0.9</slf4j.version>
         <junit.version>5.10.1</junit.version>
-        <!-- Updated Mockito and Byte Buddy for Java 25 support -->
         <mockito.version>5.14.2</mockito.version>
         <bytebuddy.version>1.15.11</bytebuddy.version>
     </properties>
 
     <dependencies>
-        <!-- Logging -->
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j.version}</version>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.4.14</version>
         </dependency>
 
         <!-- Testing -->
