@@ -1,8 +1,8 @@
-package detail;
+package product;
 
-public abstract class Detail {
+public abstract class Product {
     private final long id;
-    public Detail(long id){
+    public Product(long id){
         this.id = id;
     }
     public long getId(){

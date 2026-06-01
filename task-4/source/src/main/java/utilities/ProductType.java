@@ -1,5 +1,5 @@
 package utilities;
 
-public enum DetailType {
+public enum ProductType {
     BODY, MOTOR, ACCESSORY
 }

@@ -1,33 +1,40 @@
-import factory.AutoStorage;
-import detail.Car;
-import detail.Body;
-import detail.Motor;
-import detail.Accessory;
-import staff.Dealer;
+import factory.VehicleStorage;
 import org.junit.jupiter.api.Test;
-import java.util.concurrent.atomic.AtomicBoolean;
+import product.*;
+import staff.Dealer;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class DealerTest {
 
     @Test
-    void testDealerTakesCar() throws InterruptedException {
-        AutoStorage autoStorage = new AutoStorage(5);
-        // Pre‑fill storage with one car
-        Car car = new Car(1, new Body(1), new Motor(1), new Accessory(1));
-        autoStorage.put(car);
+    void testDealerConsumesCarAndStopsCorrectly() throws Exception {
 
-        AtomicBoolean carTaken = new AtomicBoolean(false);
-        Dealer dealer = new Dealer(autoStorage, 10, 1, false);
-        Thread t = new Thread(() -> {
-            dealer.run();
-            carTaken.set(true);
-        });
-        t.start();
-        Thread.sleep(150); // longer than delay
-        t.interrupt();
+        VehicleStorage vehicleStorage = new VehicleStorage(5);
 
-        // Check that dealer took the car (storage now empty)
-        assertEquals(0, autoStorage.getCurrentSize());
+        vehicleStorage.put(
+                new Car(
+                        1,
+                        new Body(1),
+                        new Motor(1),
+                        new Accessory(1)
+                )
+        );
+
+        Dealer dealer =
+                new Dealer(vehicleStorage, 10, 1, false);
+
+        Thread dealerThread = new Thread(dealer);
+
+        dealerThread.start();
+
+        Thread.sleep(100);
+
+        assertEquals(0, vehicleStorage.getCurrentSize());
+
+        dealerThread.interrupt();
+        dealerThread.join(1000);
+
+        assertFalse(dealerThread.isAlive());
     }
 }

@@ -1,32 +1,58 @@
-import threadpool.*;
 import org.junit.jupiter.api.Test;
+import staff.WorkTask;
+import threadpool.ThreadPool;
+
 import java.util.concurrent.atomic.AtomicInteger;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ThreadPoolTest {
 
     @Test
-    void testExecuteAndQueueSize() throws InterruptedException {
-        ThreadPool pool = new ThreadPool(2);
-        assertEquals(0, pool.getQueueSize());
+    void testExecuteTasks() throws Exception {
 
-        AtomicInteger counter = new AtomicInteger(0);
-        Runnable task = counter::incrementAndGet;
+        ThreadPool pool = new ThreadPool(2, 10);
 
-        pool.execute(task);
-        pool.execute(task);
-        Thread.sleep(100);
+        AtomicInteger counter = new AtomicInteger();
+
+        WorkTask task = counter::incrementAndGet;
+
+        pool.start();
+
+        pool.addTask(task);
+        pool.addTask(task);
+
+        Thread.sleep(200);
+
+        pool.stop();
+
         assertEquals(2, counter.get());
-        assertEquals(0, pool.getQueueSize());
+        assertEquals(0, pool.getTaskQueueSize());
     }
 
     @Test
-    void testQueueSizeWhenTasksWaiting() {
-        ThreadPool pool = new ThreadPool(1);
-        pool.execute(() -> {
-            try { Thread.sleep(500); } catch (InterruptedException e) {}
-        });
-        pool.execute(() -> {});
-        assertEquals(1, pool.getQueueSize());
+    void testQueueSizeWhenTaskWaiting() throws Exception {
+
+        ThreadPool pool = new ThreadPool(1, 10);
+
+        pool.start();
+
+        WorkTask longTask = () -> {
+            try {
+                Thread.sleep(500);
+            }
+            catch (InterruptedException ignored) {
+            }
+        };
+
+        pool.addTask(longTask);
+
+        pool.addTask(() -> {});
+
+        Thread.sleep(50);
+
+        assertEquals(1, pool.getTaskQueueSize());
+
+        pool.stop();
     }
 }

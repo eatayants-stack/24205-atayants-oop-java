@@ -1,33 +1,44 @@
 package threadpool;
 
-import java.util.concurrent.BlockingQueue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import staff.WorkTask;
+import java.util.Queue;
 
 public class WorkerThread extends Thread {
-    private static final Logger logger = LoggerFactory.getLogger(WorkerThread.class);
-    private final BlockingQueue<Runnable> taskQueue;
-    private final int id;
+    private final Queue<WorkTask> taskQueue;
 
-    public WorkerThread(BlockingQueue<Runnable> taskQueue, int id) {
+    public WorkerThread(Queue<WorkTask> taskQueue) {
         this.taskQueue = taskQueue;
-        this.id = id;
-        setName("PooledThread-" + id);
     }
 
     @Override
     public void run() {
-        try {
-            while (!Thread.currentThread().isInterrupted()) {
-                Runnable task = taskQueue.take();
-                try {
-                    task.run();
-                } catch (Throwable t) {
-                    logger.error("Uncaught exception in task executed by {}", getName(), t);
+        while (!isInterrupted()) {
+            WorkTask task = null;
+            synchronized (taskQueue) {
+                while (taskQueue.isEmpty()) {
+                    try {
+                        taskQueue.wait();
+                    } catch (InterruptedException e) {
+                        interrupt();    // восстанавливаем статус прерывания
+                        return;         // выходим из потока
+                    }
                 }
+                task = taskQueue.poll();
+                // Уведомляем поток, который мог ждать в addTask (если очередь была полна)
+                taskQueue.notifyAll();
             }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+            // Выполняем задачу вне синхронизации, чтобы не блокировать очередь
+            if (task != null) {
+                task.execute();
+            }
+        }
+    }
+
+    public void stopWorker() {
+        interrupt();
+        // Дополнительно пробуждаем поток, если он ждёт на taskQueue.wait()
+        synchronized (taskQueue) {
+            taskQueue.notifyAll();
         }
     }
 }

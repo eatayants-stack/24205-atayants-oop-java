@@ -1,6 +1,6 @@
-package detail;
+package product;
 
-public class Body extends Detail{
+public class Body extends Product {
     public Body(long id){
         super(id);
     }

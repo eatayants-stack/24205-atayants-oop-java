@@ -1,6 +1,6 @@
-package detail;
+package product;
 
-public class Car extends Detail{
+public class Car extends Product {
     private final Body body;
     private final Motor motor;
     private final Accessory accessory;
@@ -11,7 +11,7 @@ public class Car extends Detail{
         this.motor = motor;
         this.accessory = accessory;
     }
-    public long getBody(){return body.getId();}
-    public long getMotor(){return motor.getId();}
-    public long getAccessory(){return accessory.getId();}
+    public long getBodyId(){return body.getId();}
+    public long getMotorId(){return motor.getId();}
+    public long getAccessoryId(){return accessory.getId();}
 }

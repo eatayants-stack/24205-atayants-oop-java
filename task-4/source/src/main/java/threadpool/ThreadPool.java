@@ -1,32 +1,62 @@
 package threadpool;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import staff.WorkTask;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 public class ThreadPool {
-    private final BlockingQueue<Runnable> taskQueue;
-    private final WorkerThread[] workers;
-    private final boolean isRunning = true;
+    private final Queue<WorkTask> taskQueue;       // очередь задач
+    private final List<WorkerThread> workers;
+    private final int taskQueueCapacity;           // ограничение размера очереди (опционально)
 
-    public ThreadPool(int poolSize) {
-        taskQueue = new LinkedBlockingQueue<>();
-        workers = new WorkerThread[poolSize];
-        for (int i = 0; i < poolSize; i++) {
-            workers[i] = new WorkerThread(taskQueue, i);
-            workers[i].start();
+    public ThreadPool(int threadCount, int taskQueueCapacity) {
+        this.taskQueue = new LinkedList<>();
+        this.taskQueueCapacity = taskQueueCapacity;
+        this.workers = new LinkedList<>();
+        for (int i = 0; i < threadCount; i++) {
+            workers.add(new WorkerThread(taskQueue));
         }
     }
 
-    public void execute(Runnable task) {
-        if (!isRunning) throw new IllegalStateException("ThreadPool is stopped");
-        try {
-            taskQueue.put(task);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new RuntimeException("Failed to queue task due to interruption", e);
+    /**
+     * Добавить задачу в очередь.
+     * Блокируется, если очередь заполнена (аналог put).
+     */
+    public void addTask(WorkTask workTask) {
+        synchronized (taskQueue) {
+            while (taskQueue.size() >= taskQueueCapacity) {
+                try {
+                    taskQueue.wait();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
+            }
+            taskQueue.add(workTask);
+            taskQueue.notifyAll();   // пробуждаем ожидающих рабочих
         }
     }
 
-    public int getQueueSize() { return taskQueue.size(); }
+    public void start() {
+        for (WorkerThread w : workers) {
+            w.start();
+        }
+    }
 
+    public void stop() {
+        for (WorkerThread w : workers) {
+            w.stopWorker();
+        }
+    }
+
+    public int getTaskQueueSize() {
+        synchronized (taskQueue) {
+            return taskQueue.size();
+        }
+    }
+
+    public int getThreadCount() {
+        return workers.size();
+    }
 }
