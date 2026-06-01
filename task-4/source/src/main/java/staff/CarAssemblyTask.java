@@ -22,14 +22,36 @@ public class CarAssemblyTask implements WorkTask {
 
     @Override
     public void execute() {
+        Body body = null;
+        Motor motor = null;
+        Accessory accessory = null;
         try {
-            Body body = bodyStorage.get();
-            Motor motor = motorStorage.get();
-            Accessory accessory = accessoryStorage.get();
+            body = bodyStorage.get();
+            motor = motorStorage.get();
+            accessory = accessoryStorage.get();
             long carId = IDGenerator.INSTANCE.nextCarId();
             Car car = new Car(carId, body, motor, accessory);
-            carStorage.put(car);
+            put(carStorage, car);
         } catch (InterruptedException e) {
+                put(bodyStorage, body);
+                put(motorStorage, motor);
+                put(accessoryStorage, accessory);
+                Thread.currentThread().interrupt();
+        }
+    }
+
+    private <T extends Product> void put(Storage<T> storage, T item) {
+        if (item == null) return;
+        boolean interrupted = false;
+        while (true) {
+            try {
+                storage.put(item);
+                break;
+            } catch (InterruptedException ex) {
+                interrupted = true;
+            }
+        }
+        if (interrupted) {
             Thread.currentThread().interrupt();
         }
     }

@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Queue;
 
 public class ThreadPool {
-    private final Queue<WorkTask> taskQueue;       // очередь задач
+    private final Queue<WorkTask> taskQueue;
     private final List<WorkerThread> workers;
-    private final int taskQueueCapacity;           // ограничение размера очереди (опционально)
+    private final int taskQueueCapacity;
 
     public ThreadPool(int threadCount, int taskQueueCapacity) {
         this.taskQueue = new LinkedList<>();
@@ -19,10 +19,6 @@ public class ThreadPool {
         }
     }
 
-    /**
-     * Добавить задачу в очередь.
-     * Блокируется, если очередь заполнена (аналог put).
-     */
     public void addTask(WorkTask workTask) {
         synchronized (taskQueue) {
             while (taskQueue.size() >= taskQueueCapacity) {
@@ -34,7 +30,7 @@ public class ThreadPool {
                 }
             }
             taskQueue.add(workTask);
-            taskQueue.notifyAll();   // пробуждаем ожидающих рабочих
+            taskQueue.notifyAll();
         }
     }
 
@@ -54,9 +50,5 @@ public class ThreadPool {
         synchronized (taskQueue) {
             return taskQueue.size();
         }
-    }
-
-    public int getThreadCount() {
-        return workers.size();
     }
 }

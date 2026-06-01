@@ -2,7 +2,7 @@ package staff;
 
 
 public abstract class DelayService {
-    private volatile int delayMs;   // volatile для видимости изменений из разных потоков
+    private volatile int delayMs;
 
     public DelayService(int delayMs) {
         this.delayMs = delayMs;

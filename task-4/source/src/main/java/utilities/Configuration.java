@@ -34,7 +34,7 @@ public class Configuration {
         workers = getInt(props, "Workers", 10);
         dealers = getInt(props, "Dealers", 20);
         dealerDelay = getInt(props, "DealerDelay", 1000);
-        logSale = getBoolean(props, "LogSale", true);
+        logSale = getBoolean(props);
         bodySupplierDelay = getInt(props, "BodySupplierDelay", 500);
         motorSupplierDelay = getInt(props, "MotorSupplierDelay", 500);
         accessorySupplierDelay = getInt(props, "AccessorySupplierDelay", 500);
@@ -45,8 +45,8 @@ public class Configuration {
         return val != null ? Integer.parseInt(val) : defaultValue;
     }
 
-    private boolean getBoolean(Properties props, String key, boolean defaultValue) {
-        String val = props.getProperty(key);
-        return val != null ? Boolean.parseBoolean(val) : defaultValue;
+    private boolean getBoolean(Properties props) {
+        String val = props.getProperty("LogSale");
+        return val == null || Boolean.parseBoolean(val);
     }
 }

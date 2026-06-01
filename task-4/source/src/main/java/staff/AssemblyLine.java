@@ -3,6 +3,7 @@ package staff;
 import factory.Storage;
 import product.*;
 import threadpool.ThreadPool;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class AssemblyLine {
     private final ThreadPool threadPool;
@@ -10,6 +11,8 @@ public class AssemblyLine {
     private final Storage<Motor> motorStorage;
     private final Storage<Accessory> accessoryStorage;
     private final Storage<Car> carStorage;
+
+    private final AtomicInteger activeOrdersCount = new AtomicInteger(0);
 
     public AssemblyLine(int workers, int queueSize,
                         Storage<Body> bodyStorage, Storage<Motor> motorStorage,
@@ -22,21 +25,22 @@ public class AssemblyLine {
     }
 
     public void assembleCar() {
-        threadPool.addTask(new CarAssemblyTask(bodyStorage, motorStorage, accessoryStorage, carStorage));
+        activeOrdersCount.incrementAndGet();
+        threadPool.addTask(() -> {
+            try {
+                new CarAssemblyTask(bodyStorage, motorStorage, accessoryStorage, carStorage).execute();
+            } finally {
+                activeOrdersCount.decrementAndGet();
+            }
+        });
     }
 
     public int getPendingOrders() {
-        return threadPool.getTaskQueueSize();
+        return activeOrdersCount.get();
     }
-
-    public int getWorkersCount() {
-        return threadPool.getThreadCount();
-    }
-
     public void start() {
         threadPool.start();
     }
-
     public void stop() {
         threadPool.stop();
     }

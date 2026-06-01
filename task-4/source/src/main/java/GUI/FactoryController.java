@@ -2,10 +2,7 @@ package GUI;
 
 import factory.FactoryStatistics;
 
-/**
- * Интерфейс для связи графического интерфейса с фабрикой.
- * Реализуется классом factory.Factory.
- */
+
 public interface FactoryController {
     void start();
     FactoryStatistics getFactoryStatistics();

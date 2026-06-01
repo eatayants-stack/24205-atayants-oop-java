@@ -12,6 +12,12 @@ public class VehicleStorage extends Storage<Car> implements Observable {
         super(capacity);
     }
 
+    public boolean isFull() {
+        synchronized (this) {
+            return getCurrentSize() >= getCapacity();
+        }
+    }
+
     @Override
     public void register(Observer observer) {
         observers.add(observer);

@@ -13,21 +13,19 @@ public class WorkerThread extends Thread {
     @Override
     public void run() {
         while (!isInterrupted()) {
-            WorkTask task = null;
+            WorkTask task;
             synchronized (taskQueue) {
                 while (taskQueue.isEmpty()) {
                     try {
                         taskQueue.wait();
                     } catch (InterruptedException e) {
-                        interrupt();    // восстанавливаем статус прерывания
-                        return;         // выходим из потока
+                        interrupt();
+                        return;
                     }
                 }
                 task = taskQueue.poll();
-                // Уведомляем поток, который мог ждать в addTask (если очередь была полна)
                 taskQueue.notifyAll();
             }
-            // Выполняем задачу вне синхронизации, чтобы не блокировать очередь
             if (task != null) {
                 task.execute();
             }
@@ -36,7 +34,6 @@ public class WorkerThread extends Thread {
 
     public void stopWorker() {
         interrupt();
-        // Дополнительно пробуждаем поток, если он ждёт на taskQueue.wait()
         synchronized (taskQueue) {
             taskQueue.notifyAll();
         }

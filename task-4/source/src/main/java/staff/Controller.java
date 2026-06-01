@@ -16,22 +16,25 @@ public class Controller implements Observer {
     }
 
     public void initialize() {
-        int capacity = carStorage.getCapacity();
-
-        for (int i = 0; i < capacity; i++) {
+        int freeSlots = capacity - carStorage.getCurrentSize();
+        for (int i = 0; i < freeSlots; i++) {
             assemblyLine.assembleCar();
         }
     }
 
     private void onCarDemand() {
+        if (carStorage.isFull()) {
+            return;
+        }
         int carsInStock = carStorage.getCurrentSize();
         int pendingTasks = assemblyLine.getPendingOrders();
         int required = capacity - (carsInStock + pendingTasks);
-        for (int i = 0; i < required; i++) {
-            assemblyLine.assembleCar();
+        if (required > 0) {
+            for (int i = 0; i < required; i++) {
+                assemblyLine.assembleCar();
+            }
         }
     }
-
     @Override
     public void update(Event event) {
         if (event == Event.CAR_DEMAND) {

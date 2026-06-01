@@ -30,4 +30,7 @@ public class Storage<T extends Product> {
     public synchronized int getCurrentSize() { return items.size(); }
     public synchronized int getTotalProduced() { return totalProduced; }
     public int getCapacity() { return capacity; }
+    public synchronized boolean isFull() {
+        return items.size() >= capacity;
+    }
 }
