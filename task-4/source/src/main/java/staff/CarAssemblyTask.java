@@ -20,6 +20,22 @@ public class CarAssemblyTask implements WorkTask {
         this.carStorage = carStorage;
     }
 
+    private <T extends Product> void put(Storage<T> storage, T item) {
+        if (item == null) return;
+        boolean interrupted = false;
+        while (true) {
+            try {
+                storage.put(item);
+                break;
+            } catch (InterruptedException ex) {
+                interrupted = true;
+            }
+        }
+        if (interrupted) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
     @Override
     public void execute() {
         Body body = null;
@@ -33,25 +49,9 @@ public class CarAssemblyTask implements WorkTask {
             Car car = new Car(carId, body, motor, accessory);
             put(carStorage, car);
         } catch (InterruptedException e) {
-                put(bodyStorage, body);
-                put(motorStorage, motor);
-                put(accessoryStorage, accessory);
-                Thread.currentThread().interrupt();
-        }
-    }
-
-    private <T extends Product> void put(Storage<T> storage, T item) {
-        if (item == null) return;
-        boolean interrupted = false;
-        while (true) {
-            try {
-                storage.put(item);
-                break;
-            } catch (InterruptedException ex) {
-                interrupted = true;
-            }
-        }
-        if (interrupted) {
+            put(bodyStorage, body);
+            put(motorStorage, motor);
+            put(accessoryStorage, accessory);
             Thread.currentThread().interrupt();
         }
     }

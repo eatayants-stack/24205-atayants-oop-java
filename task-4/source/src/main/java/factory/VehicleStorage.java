@@ -33,7 +33,7 @@ public class VehicleStorage extends Storage<Car> implements Observable {
     @Override
     public Car get() throws InterruptedException {
         Car car = super.get();
-        notifyObservers(Event.CAR_DEMAND);
+        notifyObservers(Event.CAR_SELL);
         return car;
     }
 }

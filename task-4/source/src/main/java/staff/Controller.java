@@ -22,7 +22,7 @@ public class Controller implements Observer {
         }
     }
 
-    private void onCarDemand() {
+    private void onCarRequest() {
         if (carStorage.isFull()) {
             return;
         }
@@ -37,8 +37,8 @@ public class Controller implements Observer {
     }
     @Override
     public void update(Event event) {
-        if (event == Event.CAR_DEMAND) {
-            onCarDemand();
+        if (event == Event.CAR_SELL) {
+            onCarRequest();
         }
     }
 }
